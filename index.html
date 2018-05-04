@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0> 
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <title>ondevicemotion_p5js</title>
+  <style type="text/css">
+    html, body {
+      margin: 0;
+      padding: 0;
+    }
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.11/p5.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.11/addons/p5.dom.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.11/addons/p5.sound.min.js"></script>
+</head>
+
+
+
+
+
+<body>
+  <script type="text/javascript">
+   
+    function setup() {
+      createCanvas(windowWidth, windowHeight);
+      //stroke(255);
+      //strokeWeight(5);
+      noStroke();
+      background(0);
+    }
+
+    function windowResized(){
+      resizeCanvas(windowWidth, widnowHeight);
+    }
+ 
+    function draw() {
+
+      var xclr = map(sx, -5, 5, 0, 255);
+      var yclr = map(sy, 0, -9, 0, 255);
+      var zclr = map(sx, -5, 5, 255, 0)
+      background(xclr, yclr, zclr);
+
+      var xsize = map(sx, -5, 5, width*.5, width*.60);
+      var ysize = map(sy, 0, -9, height*.5, height*.70);
+      var xpos = map(sx, -5, 5, width/2 - 200, width/2 + 200);
+      var ypos = map(sy, 0, -9, height/2 - 200, height/2 + 200);
+
+      //fill(map(sx, -5, 5, 255, 0));
+
+      fill(255);
+      ellipse(width/2-150, height/2, xsize, ysize);
+      ellipse(width/2+150, height/2, xsize, ysize);
+
+      fill(0);
+      ellipse(xpos-150, ypos, xsize*.40, ysize*.40);
+      ellipse(xpos+150, ypos, xsize*.40, ysize*.40);
+
+      //fill(map(sy, -5, 5, 0, 255));
+      //ellipse(width/2, height-ypos, width-xsize, height-ysize);
+ 
+    }
+ 
+ 
+    /* PREFS */
+var easing = 0.5; // set between 0 - 1
+ 
+/* VARS */
+var rx, ry, rz, sx, sy, sz;
+rx = ry = rz = sx = sy = sz = 0;
+ 
+/* ONDEVICEMOTION */
+// https://developer.mozilla.org/en-US/docs/Web/Events/devicemotion
+window.ondevicemotion = function(event) {
+  /* RAW VALUES */
+  rx = event.accelerationIncludingGravity.x;
+  ry = event.accelerationIncludingGravity.y;
+  rz = event.accelerationIncludingGravity.z;
+ 
+  /* SMOOTHED VALUES */
+  sx = smoothVal(rx, sx);
+  sy = smoothVal(ry, sy);
+  sz = smoothVal(rz, sz);
+};
+ 
+ 
+/* VALUE SMOOTHING */
+function smoothVal(inputVal, outputVal) {
+  var tarVal = inputVal;
+  var calcVal = tarVal - outputVal;
+  outputVal += calcVal * easing;
+  return outputVal;
+}
+</script>
+</body>
+ 
+</html>
